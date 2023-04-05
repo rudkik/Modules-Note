@@ -15,6 +15,9 @@
                     @endif
 
                     {{ __('You are logged in!') }}
+                        <br>
+                        <a class="badge text-bg-primary rounded-pill" href="{{ route('notes.index') }}">Вопрос ответ Админка</a>
+
                 </div>
             </div>
         </div>

@@ -5,6 +5,7 @@ namespace Modules\Note\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\Note\Entities\Note;
 
 class NotesController extends Controller
 {
@@ -14,7 +15,8 @@ class NotesController extends Controller
      */
     public function index()
     {
-        return view('note::index');
+        $notes = Note::all();
+        return view('note::admin.index', ['notes' => $notes]);
     }
 
     /**
@@ -23,7 +25,7 @@ class NotesController extends Controller
      */
     public function create()
     {
-        return view('note::create');
+        return view('note::admin.create');
     }
 
     /**
@@ -33,7 +35,16 @@ class NotesController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            // решил не прописывать
+        ]);
+        $note = new Note;
+        $note->questions = $request->questions;
+        $note->answer = $request->answer;
+        $note->top = $request->top;
+        $note->bottom = $request->bottom;
+        $note->save();
+        return redirect()->route('notes.index')->with('success','Company Has Been created successfully');
     }
 
     /**
@@ -41,9 +52,9 @@ class NotesController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function show($id)
+    public function show(Note $note)
     {
-        return view('note::show');
+        return view('note::admin.show', compact('note'));
     }
 
     /**
@@ -51,9 +62,9 @@ class NotesController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function edit($id)
+    public function edit(Note $note)
     {
-        return view('note::edit');
+        return view('note::admin.edit', compact('note'));
     }
 
     /**
@@ -64,7 +75,16 @@ class NotesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+          // решил не прописывать
+        ]);
+        $note = Note::find($id);
+        $note->questions = $request->questions;
+        $note->answer = $request->answer;
+        $note->top = $request->top;
+        $note->bottom = $request->bottom;
+        $note->save();
+        return redirect()->route('notes.index')->with('success','Company Has Been updated successfully');
     }
 
     /**
@@ -74,6 +94,13 @@ class NotesController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Note::where('id',$id)->delete();
+        return redirect()->route('notes.index');
+    }
+
+
+    public function showAll(){
+        $notes = Note::all();
+        return view('note::index', ['notes' => $notes]);
     }
 }

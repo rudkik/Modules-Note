@@ -12,10 +12,8 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-Route::get('/1', function () {
-    return view('welcome');
-});
 
+Route::get('/notes', [\Modules\Note\Http\Controllers\NotesController::class, 'showAll']);
 Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function () {
     Route::resource('/notes', \Modules\Note\Http\Controllers\NotesController::class);
 });
